@@ -4,4 +4,8 @@ Repository for learning react native
 
 ## Demo:
 
-https://raw.githubusercontent.com/LukaszSelwa/rn-pokeapp/main/assets/demo.mp4
+
+
+
+https://user-images.githubusercontent.com/49595727/149020639-18f375ef-6bb9-47b1-955b-d3d601f1fde1.mp4
+
