@@ -4,4 +4,4 @@ Repository for learning react native
 
 ## Demo:
 
-![Demo Video](assets/RPReplay_Final1641932799.mov)
+![Demo Video](assets/demo.mp4)
