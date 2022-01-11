@@ -1,6 +1,5 @@
 import {
   GestureResponderEvent,
-  Image,
   LayoutChangeEvent,
   StyleSheet,
   Text,
@@ -22,20 +21,16 @@ import {
 } from "../utils/pokemon";
 import usePokemon from "../hooks/data/usePokemon";
 import LoadableImage from "./LoadableImage";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../screens/screens";
+import useOpenPokemonScreen from "../hooks/useOpenPokemonScreen";
 
 type Props = {
   id: number;
-  expanded: boolean;
-  onExpandClick?: () => void;
+  rootNavigation: StackNavigationProp<RootStackParamList, "Home">;
 };
 
-type MappedEvolution = {
-  id: number;
-  name: string;
-  imageUrl: string;
-};
-
-export default function CardContent({ id, onExpandClick, expanded }: Props) {
+export default function CardContent({ id, rootNavigation }: Props) {
   const [evolutionIdx, setEvolutionIdx] = useState(0);
   const cardWidth = useRef(0);
   useEffect(() => {
@@ -47,13 +42,11 @@ export default function CardContent({ id, onExpandClick, expanded }: Props) {
   const evolutions = useMemo(
     () =>
       data?.pokemon?.evolutions.species
-        .map(
-          (evolution): MappedEvolution => ({
-            id: evolution.id,
-            name: evolution.name,
-            imageUrl: getPokemonOfficialArtworkUrl(evolution),
-          })
-        )
+        .map((evolution) => ({
+          id: evolution.id,
+          name: evolution.name,
+          imageUrl: getPokemonOfficialArtworkUrl(evolution),
+        }))
         .sort((a, b) => a.id - b.id) || [],
     [data]
   );
@@ -68,16 +61,26 @@ export default function CardContent({ id, onExpandClick, expanded }: Props) {
     },
     [evolutions]
   );
+
   const updateCardLayout = useCallback((event: LayoutChangeEvent) => {
     cardWidth.current = event.nativeEvent.layout.width;
   }, []);
 
-  const pokemon: MappedEvolution | undefined = evolutions[evolutionIdx];
+  const pokemon = evolutions.length > 0 ? evolutions[evolutionIdx] : undefined;
+
+  const { imageRef, openPokemonScreen } = useOpenPokemonScreen({
+    id: pokemon?.id || id,
+    rootNavigation,
+  });
+
   return (
     <View onLayout={updateCardLayout} style={styles.container}>
       <TouchableWithoutFeedback onPress={handlePress}>
         <View>
-          <LoadableImage uri={pokemon?.imageUrl} />
+          <LoadableImage
+            uri={pokemon?.imageUrl}
+            ref={(img) => (imageRef.current = img)}
+          />
         </View>
       </TouchableWithoutFeedback>
       <View style={styles.bar}>
@@ -91,12 +94,12 @@ export default function CardContent({ id, onExpandClick, expanded }: Props) {
         {error && <Text>ERROR</Text>}
       </View>
       <TouchableHighlight
-        onPress={onExpandClick}
+        onPress={openPokemonScreen}
         style={styles.infoButton}
         underlayColor="#001972"
         activeOpacity={0.4}
       >
-        <Feather name={expanded ? "x" : "info"} size={28} color="#001972" />
+        <Feather name="info" size={28} color="#001972" />
       </TouchableHighlight>
     </View>
   );

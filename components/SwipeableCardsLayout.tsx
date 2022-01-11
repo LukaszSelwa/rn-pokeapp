@@ -21,7 +21,6 @@ import Animated, {
 } from "react-native-reanimated";
 
 type Props = {
-  expanded: boolean;
   backCard: ReactNode;
   frontCard: ReactNode;
   onSwiped: (reset: () => void) => void;
@@ -37,11 +36,10 @@ const INITIAL_POSITION = {
   y: 0,
 };
 
-export default function SwipeableCard({
+export default function SwipeableCardsLayout({
   frontCard,
   backCard,
   onSwiped,
-  expanded,
 }: Props) {
   const pressed = useSharedValue(false);
   const x = useSharedValue(INITIAL_POSITION.x);
@@ -96,28 +94,11 @@ export default function SwipeableCard({
         pressed.value = false;
       },
     },
-    [expanded, onSwiped]
-  );
-
-  const animatedStyleContainer = useAnimatedStyle(
-    () => ({
-      width: withTiming(
-        expanded
-          ? containerLayout.current?.width ?? CARD_DIMENSIONS.width
-          : CARD_DIMENSIONS.width
-      ),
-      height: withTiming(
-        expanded
-          ? containerLayout.current?.height ?? CARD_DIMENSIONS.height
-          : CARD_DIMENSIONS.height
-      ),
-    }),
-    [expanded]
+    [onSwiped]
   );
 
   const animatedStyleFrontCard = useAnimatedStyle(
     () => ({
-      borderRadius: withTiming(expanded ? 0 : 15),
       transform: [
         { translateX: x.value },
         { translateY: y.value },
@@ -127,7 +108,7 @@ export default function SwipeableCard({
         { scale: withSpring(pressed.value ? 1.05 : 1) },
       ],
     }),
-    [expanded]
+    []
   );
 
   const animatedStyleBackCard = useAnimatedStyle(() => {
@@ -154,11 +135,11 @@ export default function SwipeableCard({
 
   return (
     <View style={styles.container} onLayout={handleUpdateContainerLayout}>
-      <Animated.View style={[styles.cardContainer, animatedStyleContainer]}>
+      <Animated.View style={[styles.cardContainer]}>
         <Animated.View style={[styles.card, animatedStyleBackCard]}>
           {backCard}
         </Animated.View>
-        <PanGestureHandler onGestureEvent={eventHandler} enabled={!expanded}>
+        <PanGestureHandler onGestureEvent={eventHandler}>
           <Animated.View style={[styles.card, animatedStyleFrontCard]}>
             {frontCard}
           </Animated.View>
@@ -173,11 +154,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    padding: 20,
   },
   cardContainer: {
+    width: "100%",
+    aspectRatio: 2 / 3,
     position: "relative",
   },
   card: {
+    borderRadius: 15,
     position: "absolute",
     width: "100%",
     height: "100%",

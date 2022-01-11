@@ -1,17 +1,21 @@
-import React, { useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import React, { forwardRef, useState } from "react";
+import { Image, ImageProps, StyleSheet, View } from "react-native";
 import Spinner from "./Spinner";
 
 type Props = {
   uri?: string;
 };
 
-export default function LoadableImage({ uri }: Props) {
+export default forwardRef<Image, Props>(function LoadableImage(
+  { uri }: Props,
+  ref
+) {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <View style={styles.imageContainer}>
       {typeof uri === "string" && (
         <Image
+          ref={ref}
           style={styles.image}
           source={{ uri }}
           onLoadStart={() => setIsLoading(true)}
@@ -25,7 +29,7 @@ export default function LoadableImage({ uri }: Props) {
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   imageContainer: {

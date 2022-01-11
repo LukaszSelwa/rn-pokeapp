@@ -2,9 +2,11 @@ import React, { useCallback, useRef } from "react";
 import { FlatList, Text, View } from "react-native";
 import gql from "graphql-tag";
 import { FetchMoreOptions, NetworkStatus, useQuery } from "@apollo/client";
-import { PokemonSpecies } from "../utils/pokeapp";
-import LoadingScreen from "./LoadingScreen";
-import PokemonListItem from "../components/PokemonListItem";
+import { PokemonSpecies } from "../../utils/pokeapp";
+import LoadingScreen from "../LoadingScreen";
+import PokemonListItem from "../../components/PokemonListItem";
+import { DrawerScreenProps } from "@react-navigation/drawer";
+import { HomeDrawerParamList } from "./screens";
 
 const ALL_POKEMON_QUERY = gql`
   query Pokemons($limit: Int!, $offset: Int!) {
@@ -41,11 +43,14 @@ const updateAllPokemons: FetchMoreOptions<AllPokemonData>["updateQuery"] = (
   });
 };
 
-export default function AllPokemonsScreen() {
+type Props = DrawerScreenProps<HomeDrawerParamList, "AllPokemons">;
+
+export default function AllPokemonsScreen(props: Props) {
+  const rootNavigation = props.route.params.rootNavigation;
   const { loading, data, fetchMore, networkStatus } = useQuery<AllPokemonData>(
     ALL_POKEMON_QUERY,
     {
-      variables: { offset: 0, limit: 10 },
+      variables: { offset: 0, limit: 18 },
     }
   );
 
@@ -65,7 +70,9 @@ export default function AllPokemonsScreen() {
   return (
     <FlatList<PokemonSpecies>
       data={data?.pokemons}
-      renderItem={({ item }) => <PokemonListItem pokemon={item} />}
+      renderItem={({ item }) => (
+        <PokemonListItem pokemon={item} rootNavigation={rootNavigation} />
+      )}
       onEndReached={handleEndReach}
       onEndReachedThreshold={0.01}
       keyExtractor={({ name, id }) => `${id}-${name}`}

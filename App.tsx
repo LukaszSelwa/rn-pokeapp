@@ -1,12 +1,13 @@
 import { ApolloClient, ApolloProvider } from "@apollo/client";
 import { InMemoryCache } from "@apollo/client/cache/inmemory/inMemoryCache";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import AllPokemonsScreen from "./screens/AllPokemonsScreen";
-import GenerationScreen from "./screens/GenerationScreen";
+import HomeScreen from "./screens/HomeScreen/HomeScreen";
+import PokemonScreen from "./screens/PokemonScreen";
+import { RootStackParamList } from "./screens/screens";
 
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const pokemonAPIClient = new ApolloClient({
   uri: "https://beta.pokeapi.co/graphql/v1beta",
@@ -14,33 +15,27 @@ const pokemonAPIClient = new ApolloClient({
   defaultOptions: { watchQuery: { fetchPolicy: "cache-and-network" } },
 });
 
-const generations = [
-  { name: "I", id: 1 },
-  { name: "II", id: 2 },
-  { name: "III", id: 3 },
-  { name: "IV", id: 4 },
-  { name: "V", id: 5 },
-  { name: "VI", id: 6 },
-  { name: "VII", id: 7 },
-  { name: "VIII", id: 8 },
-];
-const GenerationsScreens = generations.map(({ name, id }) => ({
-  name: `Generation ${name}`,
-  Screen: function Screen() {
-    return <GenerationScreen generation={name} generationId={id} />;
-  },
-}));
-
 export default function App() {
   return (
     <NavigationContainer>
       <ApolloProvider client={pokemonAPIClient}>
-        <Drawer.Navigator>
-          <Drawer.Screen name="All Pokemons" component={AllPokemonsScreen} />
-          {GenerationsScreens.map(({ name, Screen }) => (
-            <Drawer.Screen key={name} name={name} component={Screen} />
-          ))}
-        </Drawer.Navigator>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Pokemon"
+            component={PokemonScreen}
+            options={{
+              presentation: "transparentModal",
+              headerShown: false,
+              cardStyleInterpolator: () => ({}),
+              gestureDirection: "vertical",
+            }}
+          />
+        </Stack.Navigator>
       </ApolloProvider>
     </NavigationContainer>
   );
