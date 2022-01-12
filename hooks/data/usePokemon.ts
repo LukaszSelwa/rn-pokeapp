@@ -1,6 +1,9 @@
 import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
-import { PokemonSpecies } from "../../utils/pokeapp";
+import {
+  PokemonQuery,
+  PokemonQueryVariables,
+} from "../../types/generated/graphql";
 
 const POKEMON_QUERY = gql`
   query Pokemon($pokemonId: Int!) {
@@ -18,12 +21,8 @@ const POKEMON_QUERY = gql`
   }
 `;
 
-type PokemonData = {
-  pokemon: PokemonSpecies;
-};
-
 export default function usePokemon(pokemonId: number) {
-  return useQuery<PokemonData>(POKEMON_QUERY, {
+  return useQuery<PokemonQuery, PokemonQueryVariables>(POKEMON_QUERY, {
     variables: { pokemonId },
   });
 }

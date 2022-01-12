@@ -2,19 +2,12 @@ import React, { useCallback } from "react";
 import { FlatList } from "react-native";
 import gql from "graphql-tag";
 import { FetchMoreOptions, NetworkStatus, useQuery } from "@apollo/client";
-import { PokemonSpecies } from "../../utils/pokeapp";
 import PokemonListItem from "../../components/PokemonListItem";
-import { DrawerScreenProps } from "@react-navigation/drawer";
-import { HomeDrawerParamList } from "./screens";
 import Spinner from "../../components/Spinner";
-import { CompositeScreenProps } from "@react-navigation/native";
-import {
-  StackScreenProps,
-} from "@react-navigation/stack";
-import { RootStackParamList } from "../screens";
+import { AllPokemonsQuery } from "../../types/generated/graphql";
 
 const ALL_POKEMON_QUERY = gql`
-  query Pokemons($limit: Int!, $offset: Int!) {
+  query AllPokemons($limit: Int!, $offset: Int!) {
     pokemons: pokemon_v2_pokemonspecies(
       limit: $limit
       offset: $offset
@@ -34,11 +27,7 @@ const ALL_POKEMON_QUERY = gql`
   }
 `;
 
-type AllPokemonData = {
-  pokemons: PokemonSpecies[];
-};
-
-const updateAllPokemons: FetchMoreOptions<AllPokemonData>["updateQuery"] = (
+const updateAllPokemons: FetchMoreOptions<AllPokemonsQuery>["updateQuery"] = (
   prev,
   { fetchMoreResult }
 ) => {
@@ -49,7 +38,7 @@ const updateAllPokemons: FetchMoreOptions<AllPokemonData>["updateQuery"] = (
 };
 
 export default function AllPokemonsScreen() {
-  const { loading, data, fetchMore, networkStatus } = useQuery<AllPokemonData>(
+  const { loading, data, fetchMore, networkStatus } = useQuery<AllPokemonsQuery>(
     ALL_POKEMON_QUERY,
     {
       variables: { offset: 0, limit: 18 },
@@ -68,7 +57,7 @@ export default function AllPokemonsScreen() {
   }, [data, isFetching]);
 
   return (
-    <FlatList<PokemonSpecies>
+    <FlatList<AllPokemonsQuery["pokemons"][0]>
       data={data?.pokemons}
       renderItem={({ item }) => (
         <PokemonListItem pokemon={item} />

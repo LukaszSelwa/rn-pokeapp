@@ -38,7 +38,7 @@ export default function CardContent({ id }: Props) {
 
   const evolutions = useMemo(
     () =>
-      data?.pokemon?.evolutions.species
+      data?.pokemon?.evolutions?.species
         .map((evolution) => ({
           id: evolution.id,
           name: evolution.name,

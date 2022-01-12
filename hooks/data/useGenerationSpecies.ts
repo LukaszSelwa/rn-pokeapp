@@ -1,8 +1,12 @@
 import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
+import {
+  GenerationSpeciesQuery,
+  GenerationSpeciesQueryVariables
+} from "../../types/generated/graphql";
 
 const GENERATION_SPECIES = gql`
-  query Pokemon($generationId: Int!) {
+  query GenerationSpecies($generationId: Int!) {
     generationSpecies: pokemon_v2_pokemonspecies(
       order_by: { id: asc, evolution_chain_id: asc }
       where: { generation_id: { _eq: $generationId } }
@@ -13,12 +17,11 @@ const GENERATION_SPECIES = gql`
   }
 `;
 
-type GenerationSpeciesData = {
-  generationSpecies: { id: number }[];
-};
-
 export default function useGenerationSpecies(generationId: number) {
-  return useQuery<GenerationSpeciesData>(GENERATION_SPECIES, {
-    variables: { generationId },
-  });
+  return useQuery<GenerationSpeciesQuery, GenerationSpeciesQueryVariables>(
+    GENERATION_SPECIES,
+    {
+      variables: { generationId },
+    }
+  );
 }

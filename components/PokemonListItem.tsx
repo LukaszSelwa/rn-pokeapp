@@ -7,19 +7,22 @@ import {
   View,
 } from "react-native";
 import useOpenPokemonScreen from "../hooks/useOpenPokemonScreen";
-import { PokemonSpecies } from "../utils/pokeapp";
 import {
   capitalizeString,
   getPokemonOfficialArtworkUrl,
 } from "../utils/pokemon";
 
 type Props = {
-  pokemon: PokemonSpecies;
+  pokemon?: {
+    id: number;
+    name: string;
+  };
 };
 
 export default function PokemonListItem({ pokemon }: Props) {
-
-  const { imageRef, openPokemonScreen } = useOpenPokemonScreen(pokemon.id);
+  const id = pokemon?.id || 1;
+  const name = pokemon?.name ?? "Loading"
+  const { imageRef, openPokemonScreen } = useOpenPokemonScreen(id);
 
   return (
     <TouchableHighlight onPress={openPokemonScreen} style={styles.listItem}>
@@ -27,9 +30,9 @@ export default function PokemonListItem({ pokemon }: Props) {
         <Image
           ref={(img) => (imageRef.current = img)}
           style={styles.image}
-          source={{ uri: getPokemonOfficialArtworkUrl(pokemon) }}
+          source={{ uri: getPokemonOfficialArtworkUrl({ id }) }}
         />
-        <Text style={styles.title}>{capitalizeString(pokemon.name)}</Text>
+        <Text style={styles.title}>{capitalizeString(name)}</Text>
       </View>
     </TouchableHighlight>
   );
