@@ -1,12 +1,17 @@
-import React, { useCallback, useRef } from "react";
-import { FlatList, Text, View } from "react-native";
+import React, { useCallback } from "react";
+import { FlatList } from "react-native";
 import gql from "graphql-tag";
 import { FetchMoreOptions, NetworkStatus, useQuery } from "@apollo/client";
 import { PokemonSpecies } from "../../utils/pokeapp";
-import LoadingScreen from "../LoadingScreen";
 import PokemonListItem from "../../components/PokemonListItem";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { HomeDrawerParamList } from "./screens";
+import Spinner from "../../components/Spinner";
+import { CompositeScreenProps } from "@react-navigation/native";
+import {
+  StackScreenProps,
+} from "@react-navigation/stack";
+import { RootStackParamList } from "../screens";
 
 const ALL_POKEMON_QUERY = gql`
   query Pokemons($limit: Int!, $offset: Int!) {
@@ -43,10 +48,7 @@ const updateAllPokemons: FetchMoreOptions<AllPokemonData>["updateQuery"] = (
   });
 };
 
-type Props = DrawerScreenProps<HomeDrawerParamList, "AllPokemons">;
-
-export default function AllPokemonsScreen(props: Props) {
-  const rootNavigation = props.route.params.rootNavigation;
+export default function AllPokemonsScreen() {
   const { loading, data, fetchMore, networkStatus } = useQuery<AllPokemonData>(
     ALL_POKEMON_QUERY,
     {
@@ -54,30 +56,29 @@ export default function AllPokemonsScreen(props: Props) {
     }
   );
 
+  const isFetching = networkStatus !== NetworkStatus.ready;
+
   const handleEndReach = useCallback(() => {
-    if (networkStatus !== NetworkStatus.ready) return;
+    if (isFetching) return;
 
     fetchMore({
       variables: { offset: data?.pokemons.length },
       updateQuery: updateAllPokemons,
     });
-  }, [data]);
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
+  }, [data, isFetching]);
 
   return (
     <FlatList<PokemonSpecies>
       data={data?.pokemons}
       renderItem={({ item }) => (
-        <PokemonListItem pokemon={item} rootNavigation={rootNavigation} />
+        <PokemonListItem pokemon={item} />
       )}
       onEndReached={handleEndReach}
       onEndReachedThreshold={0.01}
       keyExtractor={({ name, id }) => `${id}-${name}`}
       numColumns={3}
       contentContainerStyle={{ paddingLeft: 20, paddingRight: 20 }}
+      ListFooterComponent={Spinner}
     />
   );
 }

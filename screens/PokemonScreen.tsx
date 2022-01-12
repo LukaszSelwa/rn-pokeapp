@@ -81,7 +81,9 @@ export default function PokemonScreen({ navigation, route }: Props) {
             ],
           },
         ]}
-        source={{ uri: getPokemonOfficialArtworkUrl({ id }) }}
+        source={{
+          uri: getPokemonOfficialArtworkUrl({ id }),
+        }}
       />
       <Animated.View
         style={[

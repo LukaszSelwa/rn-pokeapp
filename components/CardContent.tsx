@@ -21,16 +21,13 @@ import {
 } from "../utils/pokemon";
 import usePokemon from "../hooks/data/usePokemon";
 import LoadableImage from "./LoadableImage";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../screens/screens";
 import useOpenPokemonScreen from "../hooks/useOpenPokemonScreen";
 
 type Props = {
   id: number;
-  rootNavigation: StackNavigationProp<RootStackParamList, "Home">;
 };
 
-export default function CardContent({ id, rootNavigation }: Props) {
+export default function CardContent({ id }: Props) {
   const [evolutionIdx, setEvolutionIdx] = useState(0);
   const cardWidth = useRef(0);
   useEffect(() => {
@@ -68,10 +65,9 @@ export default function CardContent({ id, rootNavigation }: Props) {
 
   const pokemon = evolutions.length > 0 ? evolutions[evolutionIdx] : undefined;
 
-  const { imageRef, openPokemonScreen } = useOpenPokemonScreen({
-    id: pokemon?.id || id,
-    rootNavigation,
-  });
+  const { imageRef, openPokemonScreen } = useOpenPokemonScreen(
+    pokemon?.id || id
+  );
 
   return (
     <View onLayout={updateCardLayout} style={styles.container}>

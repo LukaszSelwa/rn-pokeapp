@@ -1,4 +1,3 @@
-import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import {
   Image,
@@ -8,7 +7,6 @@ import {
   View,
 } from "react-native";
 import useOpenPokemonScreen from "../hooks/useOpenPokemonScreen";
-import { RootStackParamList } from "../screens/screens";
 import { PokemonSpecies } from "../utils/pokeapp";
 import {
   capitalizeString,
@@ -17,14 +15,11 @@ import {
 
 type Props = {
   pokemon: PokemonSpecies;
-  rootNavigation: StackNavigationProp<RootStackParamList, "Home">;
 };
 
-export default function PokemonListItem({ pokemon, rootNavigation }: Props) {
-  const { imageRef, openPokemonScreen } = useOpenPokemonScreen({
-    id: pokemon.id,
-    rootNavigation,
-  });
+export default function PokemonListItem({ pokemon }: Props) {
+
+  const { imageRef, openPokemonScreen } = useOpenPokemonScreen(pokemon.id);
 
   return (
     <TouchableHighlight onPress={openPokemonScreen} style={styles.listItem}>

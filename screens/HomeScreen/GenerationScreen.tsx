@@ -14,7 +14,7 @@ type Props = DrawerScreenProps<
 >;
 
 export default function GenerationScreen({ route }: Props) {
-  const { generationId, rootNavigation } = route.params;
+  const { generationId } = route.params;
   const { loading, data } = useGenerationSpecies(generationId);
   const [index, setIndex] = useStateCallback<number>(0);
   const [nextIndex, setNextIndex] = React.useState<number>(1);
@@ -42,13 +42,11 @@ export default function GenerationScreen({ route }: Props) {
         <CardContent
           key={index}
           id={speciesIds[index]}
-          rootNavigation={rootNavigation}
         />
       }
       backCard={
         <CardContent
           id={speciesIds[nextIndex]}
-          rootNavigation={rootNavigation}
         />
       }
     />
