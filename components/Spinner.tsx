@@ -1,20 +1,20 @@
-import React, { useEffect } from "react";
-import { Image, StyleSheet } from "react-native";
+import React, { useEffect } from 'react';
+import { Image, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withSequence,
   withTiming,
-} from "react-native-reanimated";
-import pokeball from "../assets/pokeball.png";
-import pokeballWhite from "../assets/pokeball-white.png";
+} from 'react-native-reanimated';
+import pokeball from '../assets/pokeball.png';
+import pokeballWhite from '../assets/pokeball-white.png';
 
 type Props = {
-  color?: "blue" | "white";
+  color?: 'blue' | 'white';
 };
 
-export default function Spinner({ color = "blue" }: Props) {
+export default function Spinner({ color = 'blue' }: Props) {
   const angle = useSharedValue(0);
   const scale = useSharedValue(0.9);
   useEffect(() => {
@@ -22,11 +22,11 @@ export default function Spinner({ color = "blue" }: Props) {
     scale.value = withRepeat(
       withSequence(
         withTiming(1, { duration: 500 }),
-        withTiming(0.9, { duration: 500 })
+        withTiming(0.9, { duration: 500 }),
       ),
-      -1
+      -1,
     );
-  }, []);
+  }, [angle, scale]);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ rotateZ: `${angle.value}deg` }, { scale: scale.value }],
   }));
@@ -34,7 +34,7 @@ export default function Spinner({ color = "blue" }: Props) {
     <Animated.View style={[styles.animatedView, animatedStyle]}>
       <Image
         style={styles.image}
-        source={color == "blue" ? pokeball : pokeballWhite}
+        source={color === 'blue' ? pokeball : pokeballWhite}
       />
     </Animated.View>
   );
@@ -42,7 +42,7 @@ export default function Spinner({ color = "blue" }: Props) {
 
 const styles = StyleSheet.create({
   animatedView: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   image: {
     width: 75,

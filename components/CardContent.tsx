@@ -6,22 +6,22 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
   View,
-} from "react-native";
+} from 'react-native';
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-} from "react";
-import { Feather } from "@expo/vector-icons";
+} from 'react';
+import { Feather } from '@expo/vector-icons';
 import {
   capitalizeString,
   getPokemonOfficialArtworkUrl,
-} from "../utils/pokemon";
-import usePokemon from "../hooks/data/usePokemon";
-import LoadableImage from "./LoadableImage";
-import useOpenPokemonScreen from "../hooks/useOpenPokemonScreen";
+} from '../utils/pokemon';
+import usePokemon from '../hooks/data/usePokemon';
+import LoadableImage from './LoadableImage';
+import useOpenPokemonScreen from '../hooks/useOpenPokemonScreen';
 
 type Props = {
   id: number;
@@ -45,7 +45,7 @@ export default function CardContent({ id }: Props) {
           imageUrl: getPokemonOfficialArtworkUrl(evolution),
         }))
         .sort((a, b) => a.id - b.id) || [],
-    [data]
+    [data],
   );
 
   const handlePress = useCallback(
@@ -56,7 +56,7 @@ export default function CardContent({ id }: Props) {
         setEvolutionIdx((prev) => Math.max(prev - 1, 0));
       }
     },
-    [evolutions]
+    [evolutions],
   );
 
   const updateCardLayout = useCallback((event: LayoutChangeEvent) => {
@@ -66,7 +66,7 @@ export default function CardContent({ id }: Props) {
   const pokemon = evolutions.length > 0 ? evolutions[evolutionIdx] : undefined;
 
   const { imageRef, openPokemonScreen } = useOpenPokemonScreen(
-    pokemon?.id || id
+    pokemon?.id || id,
   );
 
   return (
@@ -75,14 +75,16 @@ export default function CardContent({ id }: Props) {
         <View>
           <LoadableImage
             uri={pokemon?.imageUrl}
-            ref={(img) => (imageRef.current = img)}
+            ref={(img) => {
+              imageRef.current = img;
+            }}
           />
         </View>
       </TouchableWithoutFeedback>
       <View style={styles.bar}>
         {pokemon && (
           <Text style={styles.barTitle}>
-            {String(pokemon.id).padStart(3, "0")}{" "}
+            {String(pokemon.id).padStart(3, '0')}{' '}
             {capitalizeString(pokemon.name)}
           </Text>
         )}
@@ -104,35 +106,35 @@ export default function CardContent({ id }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "stretch",
+    alignItems: 'stretch',
   },
   bar: {
     height: 75,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     flexGrow: 1,
   },
   barTitle: {
-    color: "#001972",
-    fontWeight: "700",
+    color: '#001972',
+    fontWeight: '700',
     fontSize: 32,
     padding: 10,
   },
   infoButton: {
-    position: "absolute",
+    position: 'absolute',
     top: 13,
     right: 13,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     width: 36,
     height: 36,
     borderRadius: 18,
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowRadius: 5,
     shadowOpacity: 0.3,
     shadowOffset: {
       width: 0,
       height: 3,
     },
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

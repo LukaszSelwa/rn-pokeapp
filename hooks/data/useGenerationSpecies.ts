@@ -1,9 +1,9 @@
-import { useQuery } from "@apollo/client";
-import gql from "graphql-tag";
+import { useQuery } from '@apollo/client';
+import gql from 'graphql-tag';
 import {
   GenerationSpeciesQuery,
-  GenerationSpeciesQueryVariables
-} from "../../types/generated/graphql";
+  GenerationSpeciesQueryVariables,
+} from '../../types/generated/graphql';
 
 const GENERATION_SPECIES = gql`
   query GenerationSpecies($generationId: Int!) {
@@ -22,6 +22,6 @@ export default function useGenerationSpecies(generationId: number) {
     GENERATION_SPECIES,
     {
       variables: { generationId },
-    }
+    },
   );
 }

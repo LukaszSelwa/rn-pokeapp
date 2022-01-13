@@ -1,12 +1,12 @@
-import { DrawerScreenProps } from "@react-navigation/drawer";
-import * as React from "react";
-import CardContent from "../../components/CardContent";
-import SwipeableCardsLayout from "../../components/SwipeableCardsLayout";
-import useGenerationSpecies from "../../hooks/data/useGenerationSpecies";
-import useStateCallback from "../../hooks/useStateCallback";
-import { GenerationIds } from "../../utils/pokeapp";
-import LoadingScreen from "../LoadingScreen";
-import { HomeDrawerParamList } from "./screens";
+import { DrawerScreenProps } from '@react-navigation/drawer';
+import * as React from 'react';
+import CardContent from '../../components/CardContent';
+import SwipeableCardsLayout from '../../components/SwipeableCardsLayout';
+import useGenerationSpecies from '../../hooks/data/useGenerationSpecies';
+import useStateCallback from '../../hooks/useStateCallback';
+import { GenerationIds } from '../../utils/pokeapp';
+import LoadingScreen from '../LoadingScreen';
+import { HomeDrawerParamList } from './screens';
 
 type Props = DrawerScreenProps<
   HomeDrawerParamList,
@@ -21,7 +21,7 @@ export default function GenerationScreen({ route }: Props) {
   const speciesIds = React.useMemo(
     () =>
       data?.generationSpecies.map(({ id }) => id).sort((a, b) => a - b) || [],
-    [data]
+    [data],
   );
   const onSwiped = (resetFrontCard: () => void) =>
     setIndex(
@@ -29,7 +29,7 @@ export default function GenerationScreen({ route }: Props) {
       (state) => {
         resetFrontCard();
         setNextIndex((state + 1) % speciesIds.length);
-      }
+      },
     );
 
   if (loading) {
@@ -38,17 +38,8 @@ export default function GenerationScreen({ route }: Props) {
   return (
     <SwipeableCardsLayout
       onSwiped={onSwiped}
-      frontCard={
-        <CardContent
-          key={index}
-          id={speciesIds[index]}
-        />
-      }
-      backCard={
-        <CardContent
-          id={speciesIds[nextIndex]}
-        />
-      }
+      frontCard={<CardContent key={index} id={speciesIds[index]} />}
+      backCard={<CardContent id={speciesIds[nextIndex]} />}
     />
   );
 }

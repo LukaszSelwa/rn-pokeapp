@@ -1,14 +1,13 @@
-import * as React from "react";
-import { ReactNode } from "react";
+import * as React from 'react';
+import { ReactNode } from 'react';
 import {
   Dimensions,
   LayoutChangeEvent,
   LayoutRectangle,
   StyleSheet,
-  Text,
   View,
-} from "react-native";
-import { PanGestureHandler } from "react-native-gesture-handler";
+} from 'react-native';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -18,7 +17,7 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
 
 type Props = {
   backCard: ReactNode;
@@ -26,7 +25,7 @@ type Props = {
   onSwiped: (reset: () => void) => void;
 };
 
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_DIMENSIONS = {
   width: SCREEN_WIDTH - 30,
   height: ((SCREEN_WIDTH - 30) * 4) / 3,
@@ -58,20 +57,20 @@ export default function SwipeableCardsLayout({
     ({ nativeEvent }: LayoutChangeEvent) => {
       containerLayout.current = nativeEvent.layout;
     },
-    []
+    [],
   );
 
   const eventHandler = useAnimatedGestureHandler(
     {
-      onStart: (event, ctx) => {
+      onStart: () => {
         pressed.value = true;
       },
-      onActive: (event, ctx) => {
+      onActive: (event) => {
         x.value = INITIAL_POSITION.x + event.translationX;
         y.value = INITIAL_POSITION.y + event.translationY;
         backCardDistance.value = Math.abs(event.translationX) / SCREEN_WIDTH;
       },
-      onEnd: (event, ctx) => {
+      onEnd: (event) => {
         pressed.value = false;
         if (Math.abs(event.translationX) > 120) {
           const outsideX =
@@ -94,7 +93,7 @@ export default function SwipeableCardsLayout({
         pressed.value = false;
       },
     },
-    [onSwiped]
+    [onSwiped],
   );
 
   const animatedStyleFrontCard = useAnimatedStyle(
@@ -108,7 +107,7 @@ export default function SwipeableCardsLayout({
         { scale: withSpring(pressed.value ? 1.05 : 1) },
       ],
     }),
-    []
+    [],
   );
 
   const animatedStyleBackCard = useAnimatedStyle(() => {
@@ -118,7 +117,7 @@ export default function SwipeableCardsLayout({
         backCardDistance.value,
         [0, 1],
         [0.9, 1],
-        Extrapolate.CLAMP
+        Extrapolate.CLAMP,
       ),
       transform: [
         {
@@ -126,7 +125,7 @@ export default function SwipeableCardsLayout({
             backCardDistance.value,
             [0, 1],
             [0.8, 1],
-            Extrapolate.CLAMP
+            Extrapolate.CLAMP,
           ),
         },
       ],
@@ -152,21 +151,21 @@ export default function SwipeableCardsLayout({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 20,
   },
   cardContainer: {
-    width: "100%",
+    width: '100%',
     aspectRatio: 2 / 3,
-    position: "relative",
+    position: 'relative',
   },
   card: {
     borderRadius: 15,
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    overflow: "hidden",
-    shadowColor: "#000",
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    shadowColor: '#000',
   },
 });

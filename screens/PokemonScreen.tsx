@@ -1,31 +1,28 @@
-import { StackScreenProps, useCardAnimation } from "@react-navigation/stack";
-import React from "react";
+import { StackScreenProps, useCardAnimation } from '@react-navigation/stack';
+import React from 'react';
 import {
   Button,
-  Image,
-  ImageProps,
-  ImageStyle,
   StyleSheet,
   View,
   Animated,
   Dimensions,
   Text,
-} from "react-native";
-import usePokemon from "../hooks/data/usePokemon";
+} from 'react-native';
+import usePokemon from '../hooks/data/usePokemon';
 import {
   capitalizeString,
   getPokemonOfficialArtworkUrl,
-} from "../utils/pokemon";
-import { RootStackParamList } from "./screens";
+} from '../utils/pokemon';
+import { RootStackParamList } from './screens';
 
-type Props = StackScreenProps<RootStackParamList, "Pokemon">;
+type Props = StackScreenProps<RootStackParamList, 'Pokemon'>;
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function PokemonScreen({ navigation, route }: Props) {
   const { current } = useCardAnimation();
   const { id, sharedImageMeasure = { width: 0, x: 0, y: 0 } } = route.params;
-  const { loading, data, error } = usePokemon(id);
+  const { data } = usePokemon(id);
   return (
     <View style={styles.container}>
       <Animated.View
@@ -46,7 +43,7 @@ export default function PokemonScreen({ navigation, route }: Props) {
             borderRadius: current.progress.interpolate({
               inputRange: [0, 1],
               outputRange: [10, 0],
-              extrapolate: "clamp",
+              extrapolate: 'clamp',
             }),
             transform: [
               {
@@ -57,7 +54,7 @@ export default function PokemonScreen({ navigation, route }: Props) {
                       sharedImageMeasure.x,
                     0,
                   ],
-                  extrapolate: "clamp",
+                  extrapolate: 'clamp',
                 }),
               },
               {
@@ -68,14 +65,14 @@ export default function PokemonScreen({ navigation, route }: Props) {
                       sharedImageMeasure.y,
                     10,
                   ],
-                  extrapolate: "clamp",
+                  extrapolate: 'clamp',
                 }),
               },
               {
                 scale: current.progress.interpolate({
                   inputRange: [0, 1],
                   outputRange: [sharedImageMeasure.width / SCREEN_WIDTH, 1],
-                  extrapolate: "clamp",
+                  extrapolate: 'clamp',
                 }),
               },
             ],
@@ -94,7 +91,7 @@ export default function PokemonScreen({ navigation, route }: Props) {
                 translateY: current.progress.interpolate({
                   inputRange: [0, 1],
                   outputRange: [SCREEN_HEIGHT, 0],
-                  extrapolate: "clamp",
+                  extrapolate: 'clamp',
                 }),
               },
             ],
@@ -102,8 +99,8 @@ export default function PokemonScreen({ navigation, route }: Props) {
         ]}
       >
         <Text style={styles.title}>
-          {String(id).padStart(3, "0")}{" "}
-          {data?.pokemon ? capitalizeString(data.pokemon.name) : "Loading..."}
+          {String(id).padStart(3, '0')}{' '}
+          {data?.pokemon ? capitalizeString(data.pokemon.name) : 'Loading...'}
         </Text>
         <Button title="Go back" onPress={navigation.goBack} />
       </Animated.View>
@@ -113,30 +110,30 @@ export default function PokemonScreen({ navigation, route }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
+    height: '100%',
     flex: 1,
   },
   image: {
-    width: "100%",
+    width: '100%',
     aspectRatio: 1,
-    backgroundColor: "#001972",
+    backgroundColor: '#001972',
   },
   background: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#001972",
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#001972',
   },
   details: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     padding: 20,
     flexGrow: 1,
   },
   title: {
-    color: "#001972",
-    fontWeight: "700",
+    color: '#001972',
+    fontWeight: '700',
     fontSize: 32,
     padding: 10,
   },

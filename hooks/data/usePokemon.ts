@@ -1,9 +1,9 @@
-import { useQuery } from "@apollo/client";
-import gql from "graphql-tag";
+import { useQuery } from '@apollo/client';
+import gql from 'graphql-tag';
 import {
   PokemonQuery,
   PokemonQueryVariables,
-} from "../../types/generated/graphql";
+} from '../../types/generated/graphql';
 
 const POKEMON_QUERY = gql`
   query Pokemon($pokemonId: Int!) {

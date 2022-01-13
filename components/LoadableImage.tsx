@@ -1,6 +1,6 @@
-import React, { forwardRef, useState } from "react";
-import { Image, ImageProps, StyleSheet, View } from "react-native";
-import Spinner from "./Spinner";
+import React, { forwardRef, useState } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
+import Spinner from './Spinner';
 
 type Props = {
   uri?: string;
@@ -8,12 +8,12 @@ type Props = {
 
 export default forwardRef<Image, Props>(function LoadableImage(
   { uri }: Props,
-  ref
+  ref,
 ) {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <View style={styles.imageContainer}>
-      {typeof uri === "string" && (
+      {typeof uri === 'string' && (
         <Image
           ref={ref}
           style={styles.image}
@@ -22,7 +22,7 @@ export default forwardRef<Image, Props>(function LoadableImage(
           onLoadEnd={() => setIsLoading(false)}
         />
       )}
-      {(typeof uri !== "string" || isLoading) && (
+      {(typeof uri !== 'string' || isLoading) && (
         <View style={styles.spinnerView}>
           <Spinner color="white" />
         </View>
@@ -33,24 +33,24 @@ export default forwardRef<Image, Props>(function LoadableImage(
 
 const styles = StyleSheet.create({
   imageContainer: {
-    justifyContent: "center",
-    alignContent: "center",
-    width: "100%",
+    justifyContent: 'center',
+    alignContent: 'center',
+    width: '100%',
     aspectRatio: 1,
-    backgroundColor: "#001972",
-    position: "relative",
+    backgroundColor: '#001972',
+    position: 'relative',
   },
   image: {
-    height: "100%",
-    width: "100%",
-    resizeMode: "contain",
+    height: '100%',
+    width: '100%',
+    resizeMode: 'contain',
   },
   spinnerView: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: "#rgba(0, 24, 112, 0.51)",
-    position: "absolute",
-    justifyContent: "center",
-    alignContent: "center",
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#rgba(0, 24, 112, 0.51)',
+    position: 'absolute',
+    justifyContent: 'center',
+    alignContent: 'center',
   },
 });

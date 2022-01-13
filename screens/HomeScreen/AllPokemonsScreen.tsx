@@ -1,10 +1,10 @@
-import React, { useCallback } from "react";
-import { FlatList } from "react-native";
-import gql from "graphql-tag";
-import { FetchMoreOptions, NetworkStatus, useQuery } from "@apollo/client";
-import PokemonListItem from "../../components/PokemonListItem";
-import Spinner from "../../components/Spinner";
-import { AllPokemonsQuery } from "../../types/generated/graphql";
+import React, { useCallback } from 'react';
+import { FlatList } from 'react-native';
+import gql from 'graphql-tag';
+import { FetchMoreOptions, NetworkStatus, useQuery } from '@apollo/client';
+import PokemonListItem from '../../components/PokemonListItem';
+import Spinner from '../../components/Spinner';
+import { AllPokemonsQuery } from '../../types/generated/graphql';
 
 const ALL_POKEMON_QUERY = gql`
   query AllPokemons($limit: Int!, $offset: Int!) {
@@ -27,22 +27,23 @@ const ALL_POKEMON_QUERY = gql`
   }
 `;
 
-const updateAllPokemons: FetchMoreOptions<AllPokemonsQuery>["updateQuery"] = (
+const updateAllPokemons: FetchMoreOptions<AllPokemonsQuery>['updateQuery'] = (
   prev,
-  { fetchMoreResult }
+  { fetchMoreResult },
 ) => {
   if (!fetchMoreResult?.pokemons) return prev;
-  return Object.assign({}, prev, {
+  return {
+    ...prev,
     pokemons: [...prev.pokemons, ...fetchMoreResult.pokemons],
-  });
+  };
 };
 
 export default function AllPokemonsScreen() {
-  const { loading, data, fetchMore, networkStatus } = useQuery<AllPokemonsQuery>(
+  const { data, fetchMore, networkStatus } = useQuery<AllPokemonsQuery>(
     ALL_POKEMON_QUERY,
     {
       variables: { offset: 0, limit: 18 },
-    }
+    },
   );
 
   const isFetching = networkStatus !== NetworkStatus.ready;
@@ -54,14 +55,12 @@ export default function AllPokemonsScreen() {
       variables: { offset: data?.pokemons.length },
       updateQuery: updateAllPokemons,
     });
-  }, [data, isFetching]);
+  }, [data?.pokemons.length, fetchMore, isFetching]);
 
   return (
-    <FlatList<AllPokemonsQuery["pokemons"][0]>
+    <FlatList<AllPokemonsQuery['pokemons'][0]>
       data={data?.pokemons}
-      renderItem={({ item }) => (
-        <PokemonListItem pokemon={item} />
-      )}
+      renderItem={({ item }) => <PokemonListItem pokemon={item} />}
       onEndReached={handleEndReach}
       onEndReachedThreshold={0.01}
       keyExtractor={({ name, id }) => `${id}-${name}`}
